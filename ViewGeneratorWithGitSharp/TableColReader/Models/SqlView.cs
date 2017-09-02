@@ -8,7 +8,7 @@ namespace ViewGeneratorWithGitSharp.TableColReader.Models
 {
   public class SqlView
   {
-    public string FileName { get; set; }
-    public string FileContent { get; set; }
+    public string ViewFileName { get; set; }
+    public string ViewFileContent { get; set; }
   }
 }

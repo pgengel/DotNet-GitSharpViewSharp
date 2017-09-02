@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using ViewGeneratorWithGitSharp.TableColReader.Models;
 
 namespace ViewGeneratorWithGitSharp.TableColReader.Helpers
 {
@@ -60,14 +61,13 @@ namespace ViewGeneratorWithGitSharp.TableColReader.Helpers
       return tableColSchemaNames;
     }
 
-    private List<string> ViewBuilder(List<string> piiData, List<TableColSchemaName> tableColSchemaNames)
+    private List<SqlView> ViewBuilder(List<string> piiData, List<TableColSchemaName> tableColSchemaNames)
     {
-      StringBuilder view = new StringBuilder();
+      List<SqlView> views = new List<SqlView>();
 
       foreach (var tableColSchemaName in tableColSchemaNames)
       {
-
-
+        StringBuilder view = new StringBuilder();
         var tableNameWithOutPrefix = tableColSchemaName.Name.Replace("tb_", "");
         view.Append(
           $"--###########Geneerated by the PII Service############## \r\n" +
@@ -94,16 +94,15 @@ namespace ViewGeneratorWithGitSharp.TableColReader.Helpers
           $" " +
           $"\r\nGO\r\n\r\nEXEC sp_Version @dboObject = \'PII.vw_{tableColSchemaName.Schema}_{tableNameWithOutPrefix}.VIW\', @Version = 0, @ExpectedHash = \'\'\r\nGO\r\n"
         );
+        views.Add(new SqlView{ViewFileContent = view.ToString(), ViewFileName = $"PII.vw_{tableColSchemaName.Schema}_{tableNameWithOutPrefix}.VIW" });
       }
-
+      return views;
     }
 
-    public void GetView()
+    public List<SqlView> GetViews(List<string> piiData)
     {
-
-      var d = GetTableSchemaName("10");
-      var r = GetSchemaTableColName(d);
-      ViewBuilder(new List<string>{"", ""}, r);
+      var tableSchemaColName = GetSchemaTableColName(GetTableSchemaName("10"));
+      return ViewBuilder(piiData, tableSchemaColName);
     }
   }
 }
