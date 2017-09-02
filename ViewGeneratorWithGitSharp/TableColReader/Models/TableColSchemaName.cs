@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace ViewGeneratorWithGitSharp.TableColReader
 {
-  class TableSchemaName
+  public class TableColSchemaName : TableSchemaName
   {
-    public string Name { get; set; }
-    public string Schema { get; set; }
+    public List<string> ColumnName { get; set; }
   }
 }

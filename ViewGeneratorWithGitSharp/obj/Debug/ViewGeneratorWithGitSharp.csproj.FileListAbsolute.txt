@@ -5,3 +5,10 @@ D:\development\github\DotNet-ViewGenerator\ViewGeneratorWithGitSharp\ViewGenerat
 D:\development\github\DotNet-ViewGenerator\ViewGeneratorWithGitSharp\ViewGeneratorWithGitSharp\obj\Debug\ViewGeneratorWithGitSharp.csproj.CoreCompileInputs.cache
 D:\development\github\DotNet-ViewGenerator\ViewGeneratorWithGitSharp\ViewGeneratorWithGitSharp\obj\Debug\ViewGeneratorWithGitSharp.exe
 D:\development\github\DotNet-ViewGenerator\ViewGeneratorWithGitSharp\ViewGeneratorWithGitSharp\obj\Debug\ViewGeneratorWithGitSharp.pdb
+D:\development\github\DotNet-GitSharpViewSharp\ViewGeneratorWithGitSharp\bin\Debug\ViewGeneratorWithGitSharp.exe.config
+D:\development\github\DotNet-GitSharpViewSharp\ViewGeneratorWithGitSharp\bin\Debug\ViewGeneratorWithGitSharp.exe
+D:\development\github\DotNet-GitSharpViewSharp\ViewGeneratorWithGitSharp\bin\Debug\ViewGeneratorWithGitSharp.pdb
+D:\development\github\DotNet-GitSharpViewSharp\ViewGeneratorWithGitSharp\obj\Debug\ViewGeneratorWithGitSharp.csprojResolveAssemblyReference.cache
+D:\development\github\DotNet-GitSharpViewSharp\ViewGeneratorWithGitSharp\obj\Debug\ViewGeneratorWithGitSharp.csproj.CoreCompileInputs.cache
+D:\development\github\DotNet-GitSharpViewSharp\ViewGeneratorWithGitSharp\obj\Debug\ViewGeneratorWithGitSharp.exe
+D:\development\github\DotNet-GitSharpViewSharp\ViewGeneratorWithGitSharp\obj\Debug\ViewGeneratorWithGitSharp.pdb

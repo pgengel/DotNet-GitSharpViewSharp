@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ViewGeneratorWithGitSharp
+namespace ViewGeneratorWithGitSharp.TableColReader
 {
-  class ViewGenerator
+  public class ViewGenerator
   {
-
+    
   }
 }

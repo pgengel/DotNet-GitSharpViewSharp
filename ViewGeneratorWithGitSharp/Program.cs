@@ -20,56 +20,63 @@ namespace DataEuBotPOC
         conn.ConnectionString = "Server=DESKTOP-QFSTPSK;Database=vega;User Id=test;Password=test;";
         conn.Open();
 
-        var tableSchemaNames = new List<TableSchemaName>();
-        List<string> piiData = new List<string> { "Name" };
-        var tableColSchemaNames = new List<TableColSchemaName>();
+        List<string> piiData = new List<string> {"NAME"};
 
-        SqlCommand tableSchemaName = GetTableSchemaName(conn, "10");
-        using (SqlDataReader reader = tableSchemaName.ExecuteReader())
-        {
-          while (reader.Read())
-          {
-            tableSchemaNames = GetTableSchemaName(reader, tableSchemaNames);
-          }
-          reader.Close();
-          foreach (var schemaName in tableSchemaNames)
-          {
-            tableColSchemaNames = GetSchemaTableColName(conn, schemaName, tableColSchemaNames);
-          }
-        }
+        var tableSchemaNames = GetTableSchemaName(conn, "10");
+
+        var tableColSchemaNames = GetSchemaTableColName(conn, tableSchemaNames);
+          
         foreach (var tableColSchemaName in tableColSchemaNames)
         {
           Console.WriteLine(GenerateView(piiData, tableColSchemaName));
         }
-
       }
       Console.ReadKey();
     }
 
-    private static SqlCommand GetTableSchemaName(SqlConnection sqlConnection, string top)
-    {
-      return new SqlCommand($"SELECT TOP {top} SCHM.name, TAB.name FROM sys.tables TAB JOIN sys.schemas SCHM ON TAB.schema_id = SCHM.schema_id ", sqlConnection);
-    }
 
-    private static List<TableSchemaName> GetTableSchemaName(SqlDataReader sqlDataReader, List<TableSchemaName> tableSchemaName)
+    private static List<TableSchemaName> GetTableSchemaName(SqlConnection sqlConnection, string top)
     {
-      tableSchemaName.Add(new TableSchemaName {Name = sqlDataReader[1].ToString(), Schema = sqlDataReader[0].ToString()});
+      List<TableSchemaName> tableSchemaName = new List<TableSchemaName>();
+      
+      SqlCommand sqlCommand = new SqlCommand(
+      $"SELECT TOP {top} SCHM.name, TAB.name " +
+      $"FROM sys.tables TAB " +
+      $"JOIN sys.schemas SCHM " +
+      $" ON TAB.schema_id = SCHM.schema_id ", sqlConnection);
+
+      using (SqlDataReader readTableSchema = sqlCommand.ExecuteReader())
+      {
+        while (readTableSchema.Read())
+        {
+          tableSchemaName.Add(new TableSchemaName { Name = readTableSchema[1].ToString(), Schema = readTableSchema[0].ToString() });
+        }
+      }
       return tableSchemaName;
     }
 
-    private static List<TableColSchemaName> GetSchemaTableColName(SqlConnection conn, TableSchemaName tableSchemaName, List<TableColSchemaName> tableColSchemaNames)
+    private static List<TableColSchemaName> GetSchemaTableColName(SqlConnection sqlConnection, List<TableSchemaName> tableSchemaNames)
     {  
       List<string> columnNames = new List<string>();
+      List<TableColSchemaName> tableColSchemaNames = new List<TableColSchemaName>();
 
-      SqlCommand command = new SqlCommand($"SELECT  name,column_id FROM sys.columns WHERE OBJECT_ID = OBJECT_ID(\'{tableSchemaName.Schema}.{tableSchemaName.Name}\') ORDER BY column_id;", conn);
-      using (SqlDataReader readColumnNames = command.ExecuteReader())
+      foreach (var tableSchemaName in tableSchemaNames)
       {
-        while (readColumnNames.Read())
+        SqlCommand sqlGetTableColNames = new SqlCommand(
+        $"SELECT name, column_id " +
+        $"FROM sys.columns " +
+        $"WHERE OBJECT_ID = OBJECT_ID(\'{tableSchemaName.Schema}.{tableSchemaName.Name}\') " +
+        $"ORDER BY column_id;", sqlConnection);
+
+        using (SqlDataReader readColumnNames = sqlGetTableColNames.ExecuteReader())
         {
-          columnNames.Add(readColumnNames[0].ToString());
+          while (readColumnNames.Read())
+          {
+            columnNames.Add(readColumnNames[0].ToString());
+          }
         }
+        tableColSchemaNames.Add(new TableColSchemaName { Schema = tableSchemaName.Schema, Name = tableSchemaName.Name, ColumnName = columnNames });
       }
-      tableColSchemaNames.Add(new TableColSchemaName { Schema = tableSchemaName.Schema, Name = tableSchemaName.Name, ColumnName = columnNames });
       return tableColSchemaNames;
     }
 
@@ -91,12 +98,11 @@ namespace DataEuBotPOC
         if (!column.Equals(tableColSchemaName.ColumnName.Last()))
         {
           view.Append($",{Environment.NewLine}");
-
         }
       }
       view.Append($"\r\nFROM {tableColSchemaName.Schema}.{tableColSchemaName.Name}");
       view.Append($" " +
-                  $"\r\nGO\r\n\r\nEXEC sp_Version @dboObject = \'PII.vw_{tableColSchemaName.Schema}_{tableNameWithOutPrefix}.VIW\', @Version = 0, @ExpectedHash = \'\'\r\nGO");
+                  $"\r\nGO\r\n\r\nEXEC sp_Version @dboObject = \'PII.vw_{tableColSchemaName.Schema}_{tableNameWithOutPrefix}.VIW\', @Version = 0, @ExpectedHash = \'\'\r\nGO\r\n");
       return view;
     }
   }

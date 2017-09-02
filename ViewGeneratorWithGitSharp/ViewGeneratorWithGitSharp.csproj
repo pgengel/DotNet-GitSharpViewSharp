@@ -45,9 +45,10 @@
     <Compile Include="GitSharp\Git.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TableColReader\ColTableReader.cs" />
-    <Compile Include="TableColReader\TableSchemaName.cs" />
-    <Compile Include="TableColReader\TableColSchemaName.cs" />
+    <Compile Include="TableColReader\Models\SqlView.cs" />
+    <Compile Include="TableColReader\Models\TableSchemaName.cs" />
+    <Compile Include="TableColReader\Models\TableColSchemaName.cs" />
+    <Compile Include="TableColReader\Helpers\ViewGeneratorHelpers.cs" />
     <Compile Include="TableColReader\ViewGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
