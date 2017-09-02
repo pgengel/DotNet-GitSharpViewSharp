@@ -1,2 +1,6 @@
 
 ViewGeneratorWithGitSharp/bin/Debug/
+
+\.vs/ViewGeneratorWithGitSharp/v15/
+
+ViewGeneratorWithGitSharp/obj/Debug/
