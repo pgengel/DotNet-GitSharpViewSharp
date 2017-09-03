@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using ViewGeneratorWithGitSharp.TableColReader;
@@ -37,13 +38,23 @@ namespace DataEuBotPOC
     }
 
 
-    private static void CommitFileToDigit(string repoUrl, string commitMessage)
+    private static void CommitFileToDigit(string targetDir, string repoUrl, string commitMessage)
     {
       try
       {
-        var strCmdText =
-          $"/c cd {repoUrl} && git pull && git add . && git commit -m '{commitMessage}' && git push";
-        Process.Start("CMD.exe", strCmdText);
+        string strCmdText;
+        if (!Directory.Exists(targetDir))
+        {
+          strCmdText =
+            $"/c cd {targetDir} && ../ && git clone {repoUrl} && git add . && git commit -m '{commitMessage}' && git push";
+          Process.Start("CMD.exe", strCmdText);
+        }
+        else
+        {
+          strCmdText =
+            $"/c cd {targetDir} && git pull && git add . && git commit -m '{commitMessage}' && git push";
+          Process.Start("CMD.exe", strCmdText);
+        }
       }
       catch (Exception e)
       {
